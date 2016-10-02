@@ -48,7 +48,9 @@ RUN apt-get update && \
     libffi-dev \
     graphviz \
     libfuzzy-dev \
+    sed \
     autoconf && \
+
   rm -rf /var/lib/apt/lists/*
 
 RUN easy_install -U setuptools pygraphviz
@@ -62,7 +64,7 @@ RUN git clone https://github.com/buffer/pyv8.git && \
   cd .. && \
   rm -rf pyv8
 
-RUN pip install thug==0.8rc3
+RUN pip install thug==0.8rc6
 
 RUN groupadd -r thug && \
   useradd -r -g thug -d /home/thug -s /sbin/nologin -c "Thug User" thug && \
@@ -70,6 +72,9 @@ RUN groupadd -r thug && \
   chown -R thug:thug /home/thug /tmp/thug/logs
 
 RUN echo "/opt/libemu/lib/" > /etc/ld.so.conf.d/libemu.conf && ldconfig
+
+RUN sed -i "/^\[mongodb\]$/,/^\[/s/^enable:.*/enable: True/" /etc/thug/logging.conf.default
+RUN sed -i '/^\[mongodb\]$/,/^\[/s=^host:.*=host: mongodb://localhost:27017=' /etc/thug/logging.conf.default
 
 USER thug
 ENV HOME /home/thug
