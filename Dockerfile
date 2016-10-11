@@ -48,6 +48,7 @@ RUN apt-get update && \
     libffi-dev \
     graphviz \
     libfuzzy-dev \
+    libjpeg8-dev \
     sed \
     autoconf && \
 
@@ -64,7 +65,7 @@ RUN git clone https://github.com/buffer/pyv8.git && \
   cd .. && \
   rm -rf pyv8
 
-RUN pip install thug==0.8rc6
+RUN pip install thug==0.8
 
 RUN groupadd -r thug && \
   useradd -r -g thug -d /home/thug -s /sbin/nologin -c "Thug User" thug && \
